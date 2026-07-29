@@ -19,6 +19,7 @@ public class AddMethod {
         System.out.println("Addition is: " + addition);
     }
 
+
     public static int add(int num1, int num2) {
 
         int result = num1 + num2;
