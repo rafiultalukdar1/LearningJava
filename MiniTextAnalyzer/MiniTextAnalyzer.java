@@ -219,4 +219,73 @@ public class MiniTextAnalyzer extends JFrame {
                 }
         );
     }
+
+    // Result panel
+JPanel resultPanel =
+        new JPanel(
+                new GridLayout(
+                        2,
+                        4,
+                        12,
+                        12
+                )
+        );
+
+resultPanel.setOpaque(false);
+
+characterLabel =
+        createResultLabel(
+                "Characters",
+                "0"
+        );
+
+wordLabel =
+        createResultLabel(
+                "Words",
+                "0"
+        );
+
+sentenceLabel =
+        createResultLabel(
+                "Sentences",
+                "0"
+        );
+
+vowelLabel =
+        createResultLabel(
+                "Vowels",
+                "0"
+        );
+
+consonantLabel =
+        createResultLabel(
+                "Consonants",
+                "0"
+        );
+
+numberLabel =
+        createResultLabel(
+                "Numbers",
+                "0"
+        );
+
+spaceLabel =
+        createResultLabel(
+                "Spaces",
+                "0"
+        );
+
+resultPanel.add(characterLabel);
+resultPanel.add(wordLabel);
+resultPanel.add(sentenceLabel);
+resultPanel.add(vowelLabel);
+
+resultPanel.add(consonantLabel);
+resultPanel.add(numberLabel);
+resultPanel.add(spaceLabel);
+
+mainPanel.add(
+        resultPanel,
+        BorderLayout.SOUTH
+);
 }
