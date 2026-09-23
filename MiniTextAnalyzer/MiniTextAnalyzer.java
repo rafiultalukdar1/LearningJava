@@ -5,6 +5,15 @@ public class MiniTextAnalyzer extends JFrame {
 
     JTextArea textArea;
 
+    JLabel characterLabel;
+    JLabel wordLabel;
+    JLabel sentenceLabel;
+    JLabel vowelLabel;
+    JLabel consonantLabel;
+    JLabel numberLabel;
+    JLabel spaceLabel;
+    JLabel longestLabel;
+
     MiniTextAnalyzer() {
 
         setTitle("Mini Text Analyzer");
@@ -73,12 +82,18 @@ public class MiniTextAnalyzer extends JFrame {
                 new Color(150, 157, 180)
         );
 
-        header.add(title);
+        subtitle.setFont(
+                new Font(
+                        "Arial",
+                        Font.PLAIN,
+                        14
+                )
+        );
 
+        header.add(title);
         header.add(
                 Box.createVerticalStrut(5)
         );
-
         header.add(subtitle);
 
         mainPanel.add(
@@ -133,6 +148,77 @@ public class MiniTextAnalyzer extends JFrame {
                 BorderLayout.CENTER
         );
 
+        // Result panel
+        JPanel resultPanel =
+                new JPanel(
+                        new GridLayout(
+                                2,
+                                4,
+                                12,
+                                12
+                        )
+                );
+
+        resultPanel.setOpaque(false);
+
+        characterLabel =
+                createResultLabel(
+                        "Characters",
+                        "0"
+                );
+
+        wordLabel =
+                createResultLabel(
+                        "Words",
+                        "0"
+                );
+
+        sentenceLabel =
+                createResultLabel(
+                        "Sentences",
+                        "0"
+                );
+
+        vowelLabel =
+                createResultLabel(
+                        "Vowels",
+                        "0"
+                );
+
+        consonantLabel =
+                createResultLabel(
+                        "Consonants",
+                        "0"
+                );
+
+        numberLabel =
+                createResultLabel(
+                        "Numbers",
+                        "0"
+                );
+
+        spaceLabel =
+                createResultLabel(
+                        "Spaces",
+                        "0"
+                );
+
+        longestLabel =
+                createResultLabel(
+                        "Longest Word",
+                        "-"
+                );
+
+        resultPanel.add(characterLabel);
+        resultPanel.add(wordLabel);
+        resultPanel.add(sentenceLabel);
+        resultPanel.add(vowelLabel);
+
+        resultPanel.add(consonantLabel);
+        resultPanel.add(numberLabel);
+        resultPanel.add(spaceLabel);
+        resultPanel.add(longestLabel);
+
         // Buttons
         JButton analyzeButton =
                 new JButton(
@@ -154,6 +240,14 @@ public class MiniTextAnalyzer extends JFrame {
                 new Color(55, 61, 82)
         );
 
+        analyzeButton.addActionListener(
+                e -> analyzeText()
+        );
+
+        clearButton.addActionListener(
+                e -> clearText()
+        );
+
         JPanel buttonPanel =
                 new JPanel(
                         new GridLayout(
@@ -169,12 +263,74 @@ public class MiniTextAnalyzer extends JFrame {
         buttonPanel.add(analyzeButton);
         buttonPanel.add(clearButton);
 
-        mainPanel.add(
+        JPanel bottomPanel =
+                new JPanel(
+                        new BorderLayout(
+                                0,
+                                12
+                        )
+                );
+
+        bottomPanel.setOpaque(false);
+
+        bottomPanel.add(
+                resultPanel,
+                BorderLayout.CENTER
+        );
+
+        bottomPanel.add(
                 buttonPanel,
                 BorderLayout.SOUTH
         );
 
+        mainPanel.add(
+                bottomPanel,
+                BorderLayout.SOUTH
+        );
+
         add(mainPanel);
+    }
+
+    JLabel createResultLabel(
+            String title,
+            String value
+    ) {
+
+        JLabel label =
+                new JLabel(
+                        "<html>"
+                                + "<center>"
+                                + "<b>"
+                                + title
+                                + "</b><br>"
+                                + "<font size='5'>"
+                                + value
+                                + "</font>"
+                                + "</center>"
+                                + "</html>",
+                        SwingConstants.CENTER
+                );
+
+        label.setOpaque(true);
+
+        label.setBackground(
+                new Color(25, 29, 45)
+        );
+
+        label.setForeground(
+                Color.WHITE
+        );
+
+        label.setBorder(
+                BorderFactory.createEmptyBorder(
+                        10,
+                        5,
+                        10,
+                        5
+                )
+        );
+
+        return label;
     }
 
     void styleButton(
@@ -200,8 +356,280 @@ public class MiniTextAnalyzer extends JFrame {
 
         button.setBorder(
                 BorderFactory.createEmptyBorder(
-                        12, 15, 12, 15
+                        12,
+                        15,
+                        12,
+                        15
                 )
+        );
+    }
+
+    void analyzeText() {
+
+        String text =
+                textArea.getText();
+
+        if (
+                text.trim().isEmpty()
+        ) {
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Please enter some text!"
+            );
+
+            return;
+        }
+
+        int characters =
+                text.length();
+
+        int words = 0;
+        int sentences = 0;
+        int vowels = 0;
+        int consonants = 0;
+        int numbers = 0;
+        int spaces = 0;
+
+        // Count characters
+        for (
+                int i = 0;
+                i < text.length();
+                i++
+        ) {
+
+            char ch =
+                    text.charAt(i);
+
+            // Space count
+            if (
+                    Character.isWhitespace(ch)
+            ) {
+
+                spaces++;
+            }
+
+            // Number count
+            if (
+                    Character.isDigit(ch)
+            ) {
+
+                numbers++;
+            }
+
+            // Vowel and consonant
+            if (
+                    Character.isLetter(ch)
+            ) {
+
+                char lower =
+                        Character.toLowerCase(ch);
+
+                if (
+                        lower == 'a'
+                                ||
+                        lower == 'e'
+                                ||
+                        lower == 'i'
+                                ||
+                        lower == 'o'
+                                ||
+                        lower == 'u'
+                ) {
+
+                    vowels++;
+
+                } else {
+
+                    consonants++;
+                }
+            }
+
+            // Sentence count
+            if (
+                    ch == '.'
+                            ||
+                    ch == '!'
+                            ||
+                    ch == '?'
+            ) {
+
+                sentences++;
+            }
+        }
+
+        // Word count
+        String trimmed =
+                text.trim();
+
+        if (!trimmed.isEmpty()) {
+
+            String[] wordArray =
+                    trimmed.split(
+                            "\\s+"
+                    );
+
+            words =
+                    wordArray.length;
+
+            // Find longest word
+            String longestWord = "";
+
+            for (
+                    String word : wordArray
+            ) {
+
+                String cleanWord =
+                        word.replaceAll(
+                                "[^a-zA-Z0-9]",
+                                ""
+                        );
+
+                if (
+                        cleanWord.length()
+                                >
+                        longestWord.length()
+                ) {
+
+                    longestWord =
+                            cleanWord;
+                }
+            }
+
+            updateLabel(
+                    longestLabel,
+                    "Longest Word",
+                    longestWord
+            );
+        }
+
+        updateLabel(
+                characterLabel,
+                "Characters",
+                String.valueOf(
+                        characters
+                )
+        );
+
+        updateLabel(
+                wordLabel,
+                "Words",
+                String.valueOf(
+                        words
+                )
+        );
+
+        updateLabel(
+                sentenceLabel,
+                "Sentences",
+                String.valueOf(
+                        sentences
+                )
+        );
+
+        updateLabel(
+                vowelLabel,
+                "Vowels",
+                String.valueOf(
+                        vowels
+                )
+        );
+
+        updateLabel(
+                consonantLabel,
+                "Consonants",
+                String.valueOf(
+                        consonants
+                )
+        );
+
+        updateLabel(
+                numberLabel,
+                "Numbers",
+                String.valueOf(
+                        numbers
+                )
+        );
+
+        updateLabel(
+                spaceLabel,
+                "Spaces",
+                String.valueOf(
+                        spaces
+                )
+        );
+    }
+
+    void updateLabel(
+            JLabel label,
+            String title,
+            String value
+    ) {
+
+        label.setText(
+                "<html>"
+                        + "<center>"
+                        + "<b>"
+                        + title
+                        + "</b><br>"
+                        + "<font size='5'>"
+                        + value
+                        + "</font>"
+                        + "</center>"
+                        + "</html>"
+        );
+    }
+
+    void clearText() {
+
+        textArea.setText("");
+
+        updateLabel(
+                characterLabel,
+                "Characters",
+                "0"
+        );
+
+        updateLabel(
+                wordLabel,
+                "Words",
+                "0"
+        );
+
+        updateLabel(
+                sentenceLabel,
+                "Sentences",
+                "0"
+        );
+
+        updateLabel(
+                vowelLabel,
+                "Vowels",
+                "0"
+        );
+
+        updateLabel(
+                consonantLabel,
+                "Consonants",
+                "0"
+        );
+
+        updateLabel(
+                numberLabel,
+                "Numbers",
+                "0"
+        );
+
+        updateLabel(
+                spaceLabel,
+                "Spaces",
+                "0"
+        );
+
+        updateLabel(
+                longestLabel,
+                "Longest Word",
+                "-"
         );
     }
 
@@ -219,73 +647,4 @@ public class MiniTextAnalyzer extends JFrame {
                 }
         );
     }
-
-    // Result panel
-JPanel resultPanel =
-        new JPanel(
-                new GridLayout(
-                        2,
-                        4,
-                        12,
-                        12
-                )
-        );
-
-resultPanel.setOpaque(false);
-
-characterLabel =
-        createResultLabel(
-                "Characters",
-                "0"
-        );
-
-wordLabel =
-        createResultLabel(
-                "Words",
-                "0"
-        );
-
-sentenceLabel =
-        createResultLabel(
-                "Sentences",
-                "0"
-        );
-
-vowelLabel =
-        createResultLabel(
-                "Vowels",
-                "0"
-        );
-
-consonantLabel =
-        createResultLabel(
-                "Consonants",
-                "0"
-        );
-
-numberLabel =
-        createResultLabel(
-                "Numbers",
-                "0"
-        );
-
-spaceLabel =
-        createResultLabel(
-                "Spaces",
-                "0"
-        );
-
-resultPanel.add(characterLabel);
-resultPanel.add(wordLabel);
-resultPanel.add(sentenceLabel);
-resultPanel.add(vowelLabel);
-
-resultPanel.add(consonantLabel);
-resultPanel.add(numberLabel);
-resultPanel.add(spaceLabel);
-
-mainPanel.add(
-        resultPanel,
-        BorderLayout.SOUTH
-);
 }
